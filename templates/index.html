@@ -78,7 +78,7 @@ async function send(text){
  text=text.trim();if(!text)return;
  add("user",text);input.value="";status.textContent="PROCESSING…";
  try{
-  const r=await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,history})});
+  const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,history})});
   const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||"알 수 없는 오류");
   add("assistant",d.reply);history.push({role:"user",content:text},{role:"assistant",content:d.reply});
   if("speechSynthesis"in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(d.reply);u.lang="ko-KR";u.rate=.94;speechSynthesis.speak(u)}
