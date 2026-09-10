@@ -45,10 +45,7 @@ button:active{transform:scale(.96)}
  .composer{grid-column:1/-1}
  .greet h1{font-size:24px}
 }
-</style>
-</head>
-<body>
- /* 배경화면 및 기본 스타일 */
+  /* 배경화면 및 기본 스타일 */
 body {
   background: url('https://i.imgur.com/lZoiGX4.png') no-repeat center center fixed;
   background-size: cover;
@@ -68,6 +65,9 @@ body.speaking {
     filter: brightness(1.35) drop-shadow(0 0 25px rgba(0, 217, 255, 0.8));
   }
 }
+</style>
+</head>
+<body>
 <div class="app">
 <header><div class="logo">J.A.R.V.I.S.</div><div class="ready" id="status">SYSTEM READY</div></header>
 <main>
@@ -95,17 +95,28 @@ function add(role,text){
  chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
 }
 async function send(text){
- text=text.trim();if(!text)return;
- add("user",text);input.value="";status.textContent="PROCESSING…";
- try{
-  saveMessage("user", text);
-  const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,history})});
-  const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||"알 수 없는 오류");
-  saveMessage("assistant", d.reply);
-  add("assistant",d.reply);history.push({role:"user",content:text},{role:"assistant",content:d.reply});
-  if("speechSynthesis"in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(d.reply);u.lang="ko-KR";u.rate=.94;speechSynthesis.speak(u)}
- }catch(e){add("assistant",e.message);status.textContent="SYSTEM ERROR";return}
- status.textContent="SYSTEM READY";
+  text=text.trim();if(!text)return;
+  add("user",text);input.value="";status.textContent="PROCESSING...";
+  try{
+    saveMessage("user", text);
+    document.body.classList.add('speaking'); // 애니메이션 시작
+    const r = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    const d = await r.json();
+    if(!r.ok||d.error)throw new Error(d.error||"알 수 없는 오류");
+    saveMessage("assistant", d.reply);
+    add("assistant", d.reply);
+    document.body.classList.remove('speaking'); // 애니메이션 종료
+    history.push({role:"user",content:text},{role:"assistant",content:d.reply});
+    if("speechSynthesis" in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(d.reply);u.lang="ko-KR";u.rate=.94;speechSynthesis.speak(u)}
+  }catch(e){
+    document.body.classList.remove('speaking');
+    add("assistant",e.message);status.textContent="SYSTEM ERROR";return
+  }
+  status.textContent="SYSTEM READY";
 }
 document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();send(input.value)});
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
