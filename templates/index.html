@@ -104,15 +104,13 @@ function saveMessage(sender, text) {
 
 // 2. 저장된 대화 내역 불러오기 함수
 function loadHistory() {
-    const history = JSON.parse(localStorage.getItem('jarvis_history') || '[]');
-    history.forEach(item => {
-        // 기존 화면에 메시지를 출력하는 함수 호출 (함수명은 기존 코드에 맞게 유지)
-        add(item.sender, item.text); 
-    });
+  const saved = JSON.parse(localStorage.getItem('jarvis_history') || '[]');
+  saved.forEach(item => {
+    add(item.sender, item.text);
+    history.push({ role: item.sender === "user" ? "user" : "assistant", content: item.text });
+  });
 }
-
-// 3. 페이지 접속 시 자동으로 이전 대화 불러오기
-document.addEventListener('DOMContentLoaded', loadHistory);
+loadHistory();
 </script>
 </body>
 </html>
