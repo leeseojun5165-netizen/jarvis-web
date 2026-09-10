@@ -48,6 +48,26 @@ button:active{transform:scale(.96)}
 </style>
 </head>
 <body>
+ /* 배경화면 및 기본 스타일 */
+body {
+  background: url('https://i.imgur.com/lZoiGX4.png') no-repeat center center fixed;
+  background-size: cover;
+  transition: filter 0.3s ease;
+}
+
+/* 자비스가 답변할 때 발광하는 애니메이션 */
+body.speaking {
+  animation: jarvisPulse 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes jarvisPulse {
+  0% {
+    filter: brightness(1) drop-shadow(0 0 5px rgba(0, 217, 255, 0.3));
+  }
+  100% {
+    filter: brightness(1.35) drop-shadow(0 0 25px rgba(0, 217, 255, 0.8));
+  }
+}
 <div class="app">
 <header><div class="logo">J.A.R.V.I.S.</div><div class="ready" id="status">SYSTEM READY</div></header>
 <main>
