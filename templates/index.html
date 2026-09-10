@@ -45,14 +45,19 @@ button:active{transform:scale(.96)}
  .composer{grid-column:1/-1}
  .greet h1{font-size:24px}
 }
-  /* 배경화면 및 기본 스타일 */
+/* 배경화면 (Flask static 경로) */
 body {
-  background: url('https://i.imgur.com/lZoiGX4.png') no-repeat center center fixed;
+  background: url("{{ url_for('static', filename='bg.png') }}") no-repeat center center fixed;
   background-size: cover;
   transition: filter 0.3s ease;
 }
 
-/* 자비스가 답변할 때 발광하는 애니메이션 */
+/* 기존 중앙 아크 리액터 숨기기 */
+.hero {
+  display: none !important;
+}
+
+/* 자비스 답변 발광 애니메이션 */
 body.speaking {
   animation: jarvisPulse 1.2s infinite alternate ease-in-out;
 }
@@ -64,18 +69,7 @@ body.speaking {
   100% {
     filter: brightness(1.35) drop-shadow(0 0 25px rgba(0, 217, 255, 0.8));
   }
-}
- /* 배경화면 (GitHub static 폴더 이미지 연결) */
-body {
-  background: url('/static/bg.png') no-repeat center center fixed;
-  background-size: cover;
-  transition: filter 0.3s ease;
-}
-
-/* 기존 중앙 아크 리액터 및 문구 숨기기 (사진과 겹침 방지) */
-.hero {
-  display: none !important;
-}
+} 
 </style>
 </head>
 <body>
